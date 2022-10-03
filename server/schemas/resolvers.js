@@ -1,4 +1,4 @@
-const { User, Book } = require('../models');
+const { User } = require('../models');
 const { AuthenticationError } = require('apollo-server-express');
 const { signToken } = require('../utils/auth');
 
@@ -40,25 +40,32 @@ const resolvers = {
 
             return { token, user };
         },
-        saveBook: async (parent, args) => {
-            if (context.user) {
-                let book = await Book.findOne({ bookId: args.bookId });
-                if (!book) {
-                    book = await Book.create(args);
-                }
+        //     saveBook: async (parent, args) => {
+        //         if (context.user) {
+        //             let book = await Book.findOne({ bookId: args.bookId });
+        //             if (!book) {
+        //                 book = await Book.create(args);
+        //             }
 
-                return await User.findByIdAndUpdate(
-                    { _id: context.user._id },
-                    { $addToSet: { books: book } },
-                    { new: true }
-                )
-            }
-            throw new AuthenticationError('You need to be logged in');
-        },
-        removeBook: async (parent, { bookId }) => {
-            if (context.user) {
-
-            }
-        }
+        //             return await User.findByIdAndUpdate(
+        //                 { _id: context.user._id },
+        //                 { $addToSet: { books: book.bookId } },
+        //                 { new: true }
+        //             )
+        //         }
+        //         throw new AuthenticationError('You need to be logged in');
+        //     },
+        //     removeBook: async (parent, { bookId }) => {
+        //         if (context.user) {
+        //             return await User.findByIdAndUpdate(
+        //                 { _id: context.user._id },
+        //                 { $pull: { books: bookId } },
+        //                 { new: true }
+        //             );
+        //         }
+        //         throw new AuthenticationError('You need to be logged in');
+        //     }
     }
 }
+
+module.exports = resolvers;
