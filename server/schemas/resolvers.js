@@ -4,6 +4,7 @@ const { signToken } = require('../utils/auth');
 
 const resolvers = {
     Query: {
+        // query to get the information for the current user
         me: async (parent, args, context) => {
             if (context.user) {
                 const userData = await User.findOne({ _id: context.user._id })
@@ -18,6 +19,7 @@ const resolvers = {
     },
 
     Mutation: {
+        // login mutator that will check if the user exists, if they do it will then verify their password
         login: async (parent, { email, password }) => {
             const user = await User.findOne({ email });
 
@@ -34,12 +36,14 @@ const resolvers = {
             const token = signToken(user);
             return { token, user };
         },
+        // mutator to add or create a new user
         addUser: async (parent, args) => {
             const user = await User.create(args);
             const token = signToken(user);
 
             return { token, user };
         },
+        // mutator to add a book to the current user's savedBooks
         saveBook: async (parent, { input }, context) => {
             if (context.user) {
                 return await User.findByIdAndUpdate(
@@ -50,6 +54,7 @@ const resolvers = {
             }
             throw new AuthenticationError('You need to be logged in');
         },
+        // mutator to remove a book from the current user's savedBooks
         removeBook: async (parent, { bookId }, context) => {
             if (context.user) {
                 return await User.findByIdAndUpdate(
