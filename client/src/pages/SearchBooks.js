@@ -46,6 +46,7 @@ const SearchBooks = () => {
         title: book.volumeInfo.title,
         description: book.volumeInfo.description,
         image: book.volumeInfo.imageLinks?.thumbnail || '',
+        link: book.accessInfo.webReaderLink || ''
       }));
 
       setSearchedBooks(bookData);
@@ -68,12 +69,17 @@ const SearchBooks = () => {
     }
 
     try {
-      const response = await saveBook(bookToSave);
+      // const response = await saveBook(bookToSave);
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      // if (!response.ok) {
+      //   throw new Error('something went wrong!');
+      // }
 
+      console.log(bookToSave);
+      const { data } = await saveBook({
+        variables: { input: bookToSave }
+      });
+      console.log(savedBookIds);
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {
