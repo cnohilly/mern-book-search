@@ -45,7 +45,6 @@ const resolvers = {
         },
         // mutator to add a book to the current user's savedBooks
         saveBook: async (parent, { input }, context) => {
-            console.log(input);
             if (context.user) {
                 return await User.findByIdAndUpdate(
                     { _id: context.user._id },
@@ -60,7 +59,7 @@ const resolvers = {
             if (context.user) {
                 return await User.findByIdAndUpdate(
                     { _id: context.user._id },
-                    { $pull: { savedBooks: bookId } },
+                    { $pull: { savedBooks: { bookId } } },
                     { new: true }
                 );
             }
